@@ -34,18 +34,22 @@ export default function App() {
   // return <h1 className="text-3xl font-bold text-red-500">Hello Tailwind</h1>;
 
   return (
-    <div className="flex flex-col h-screen bg-gray-100">
-      <div className="flex-1 overflow-y-auto px-4 py-4">
-        <div className="mx-auto max-w-chat-container">
+    <div className="flex flex-col h-screen">
+      {/* 上部: メッセージリスト */}
+      <div className="flex-1 overflow-y-auto">
+        <div className="mx-auto w-full max-w-chat-container px-4 py-3">
           <MessageList messages={messages} />
         </div>
-        <div ref={bottomRef} />
       </div>
-      <div className="border-t bg-white p-4">
-        <div className="mx-auto w-full max-w-chat-container">
+
+      {/* 下部: 入力欄 */}
+      <div className="border-t bg-white">
+        <div className="mx-auto w-full max-w-chat-container px-4 py-2">
           <MessageInput onSend={handleSend} />
         </div>
       </div>
     </div>
+
+
   );
 }
