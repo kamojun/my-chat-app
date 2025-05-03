@@ -5,14 +5,15 @@ type Message = {
 
 export default function MessageList({ messages }: { messages: Message[] }) {
   return (
-    <div className="space-y-2">
-      {messages.map((msg, index) => (
+
+    <div className="space-y-3 flex flex-col">
+      {messages.map((msg, i) => (
         <div
-          key={index}
-          className={`max-w-xs p-2 rounded-lg ${msg.role === 'user'
-            ? 'bg-blue-100 self-end text-right ml-auto'
-            : 'bg-gray-100 self-start text-left mr-auto'
-            }`}
+          className={`px-4 py-2 rounded-lg shadow w-fit break-words
+    ${msg.role === 'user'
+              ? 'bg-blue-100 self-end text-right'
+              : 'bg-white self-start text-left border'}
+  `}
         >
           {msg.content}
         </div>
