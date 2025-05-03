@@ -1,22 +1,31 @@
 import { useState, useRef, useEffect } from 'react';
-import MessageList from './MessageList';
-import MessageInput from './MessageInput';
+import MessageList from './components/MessageList';
+import MessageInput from './components/MessageInput';
+import type { Message } from './types/message';
 import './index.css';
-
-type Message = {
-  role: 'user' | 'assistant';
-  content: string;
-};
 
 export default function App() {
   const [messages, setMessages] = useState<Message[]>([]);
   const bottomRef = useRef<HTMLDivElement>(null);
 
-  const handleSend = (text: string) => {
-    setMessages(prev => [...prev, { role: 'user', content: text }]);
-    setTimeout(() => {
-      setMessages(prev => [...prev, { role: 'assistant', content: '（仮の応答）' }]);
-    }, 500);
+  const handleSend = (text: string, image?: File) => {
+    // 1. user メッセージを追加
+    const userMessage: Message = {
+      role: 'user',
+      content: text,
+      image,
+    };
+
+    // 2. 仮の assistant メッセージを作る（例: オウム返し）
+    const assistantMessage: Message = {
+      role: 'assistant',
+      content: [
+        text && `「${text}」とおっしゃいましたね。`,
+        image && '画像も受け取りました！',
+      ].filter(Boolean).join('\n')
+    };
+
+    setMessages((prev) => [...prev, userMessage, assistantMessage]);
   };
 
   useEffect(() => {

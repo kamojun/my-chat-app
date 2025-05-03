@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { HiArrowUp } from 'react-icons/hi';
+import TextareaAutosize from 'react-textarea-autosize';
 
 export default function MessageInput({ onSend }: { onSend: (text: string, image?: File) => void }) {
   const [text, setText] = useState('');
@@ -15,14 +16,21 @@ export default function MessageInput({ onSend }: { onSend: (text: string, image?
 
   const handlePaste = (e: React.ClipboardEvent<HTMLTextAreaElement>) => {
     const items = e.clipboardData.items;
+    let foundImage = false;
+
     for (let i = 0; i < items.length; i++) {
       const item = items[i];
       if (item.type.startsWith('image/')) {
         const file = item.getAsFile();
         if (file) {
           setImage(file);
+          foundImage = true;
         }
       }
+    }
+
+    if (foundImage) {
+      e.preventDefault(); // ← ⛔ テキストの貼り付けをブロック
     }
   };
 
@@ -37,9 +45,12 @@ export default function MessageInput({ onSend }: { onSend: (text: string, image?
   return (
     <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
       <div className="flex items-center gap-2">
-        <div className="flex-1">
-          <textarea
-            className="w-full h-10 border rounded px-3 py-2 resize-none box-border focus:outline-none focus:ring-2 focus:ring-blue-300"
+        <div className="relative w-full">
+          <TextareaAutosize
+            minRows={1}
+            maxRows={6}
+            className={`w-full border rounded px-3 py-3 resize-none box-border focus:outline-none focus:ring-2 focus:ring-blue-300 ${image ? 'pl-14' : ''
+              }`}
             value={text}
             onChange={(e) => setText(e.target.value)}
             onKeyDown={handleKeyDown}
@@ -49,13 +60,11 @@ export default function MessageInput({ onSend }: { onSend: (text: string, image?
             placeholder="メッセージを入力..."
           />
           {image && (
-            <div className="mt-2">
-              <img
-                src={URL.createObjectURL(image)}
-                alt="preview"
-                className="w-24 h-auto rounded border"
-              />
-            </div>
+            <img
+              src={URL.createObjectURL(image)}
+              alt="preview"
+              className="absolute top-1/2 left-2 w-10 h-10 -translate-y-1/2 object-cover border rounded shadow"
+            />
           )}
         </div>
         <button
