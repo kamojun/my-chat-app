@@ -1,35 +1,30 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from 'react';
+import MessageList from './MessageList';
+import MessageInput from './MessageInput';
 
-function App() {
-  const [count, setCount] = useState(0)
+type Message = {
+  role: 'user' | 'assistant';
+  content: string;
+};
+
+export default function App() {
+  const [messages, setMessages] = useState<Message[]>([]);
+
+  const handleSend = (text: string) => {
+    setMessages(prev => [...prev, { role: 'user', content: text }]);
+
+    // 仮のレスポンス
+    setTimeout(() => {
+      setMessages(prev => [...prev, { role: 'assistant', content: '（仮の応答）' }]);
+    }, 500);
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className="flex flex-col h-screen p-4">
+      <div className="flex-1 overflow-y-auto">
+        <MessageList messages={messages} />
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+      <MessageInput onSend={handleSend} />
+    </div>
+  );
 }
-
-export default App
