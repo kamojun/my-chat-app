@@ -1,23 +1,22 @@
-import { Request, Response } from 'express';
+import { Request, Response, RequestHandler } from 'express';
+import { processImages } from '../utils/imageProcessor';
 
 interface MessageRequest extends Request {
   body: {
     content: string;
   };
-  images?: Express.Multer.File[]; // ✅ 複数ファイルに変更
+  files?: Express.Multer.File[]; // ✅ 複数ファイルに変更
 }
+export const handleMessage: RequestHandler = async (req, res) => {
+  const content = (req.body as any).content;
+  const files = req.files as Express.Multer.File[] ?? [];
 
-
-export const handleMessage = (req: MessageRequest, res: Response) => {
-  console.log(req.body);
-  const content = req.body.content;
-  const files = req.files as Express.Multer.File[] || [];
-  const imageUrls = files.map((file) => `/uploads/${file.filename}`);
+  const processedImageUrls = await processImages(files);
 
   const replyContent = [
-    content && `「${content}」とおっしゃいましたね。`,
-    imageUrls.length > 0 && `画像を ${imageUrls.length} 枚受け取りました。`,
-    '(バックエンドから返信)',
+    `「${content}」とおっしゃいましたね。`,
+    processedImageUrls.length > 0 && `画像を加工してお返しします。`,
+    '(バックエンドより返信)',
   ]
     .filter(Boolean)
     .join('\n');
@@ -25,6 +24,6 @@ export const handleMessage = (req: MessageRequest, res: Response) => {
   res.json({
     role: 'assistant',
     content: replyContent,
-    imageUrls,
+    imageUrls: processedImageUrls,
   });
 };
