@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { HiArrowUp } from 'react-icons/hi';
 import TextareaAutosize from 'react-textarea-autosize';
+import ImagePreview from './ImagePreview';
 
 export default function MessageInput({ onSend }: { onSend: (text: string, image?: File) => void }) {
   const [text, setText] = useState('');
   const [image, setImage] = useState<File | null>(null);
+  const [images, setImages] = useState<File[]>([]);
   const [isComposing, setIsComposing] = useState(false);
 
   const handleSubmit = () => {
@@ -15,23 +17,19 @@ export default function MessageInput({ onSend }: { onSend: (text: string, image?
   };
 
   const handlePaste = (e: React.ClipboardEvent<HTMLTextAreaElement>) => {
-    const items = e.clipboardData.items;
-    let foundImage = false;
 
-    for (let i = 0; i < items.length; i++) {
-      const item = items[i];
-      if (item.type.startsWith('image/')) {
-        const file = item.getAsFile();
-        if (file) {
-          setImage(file);
-          foundImage = true;
-        }
-      }
-    }
+    // const newImages: File[] = [];
+    const newImages = Array.from(e.clipboardData.items)
+      .filter((item) => item.type.startsWith('image/'))
+      .map((item) => item.getAsFile())
+      .filter((file): file is File => file !== null);
 
-    if (foundImage) {
+    if (newImages.length > 0) {
       e.preventDefault(); // ← ⛔ テキストの貼り付けをブロック
+      setImages((prev) => [...prev, ...newImages]);
     }
+
+
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -59,13 +57,13 @@ export default function MessageInput({ onSend }: { onSend: (text: string, image?
             onCompositionEnd={() => setIsComposing(false)}
             placeholder="メッセージを入力..."
           />
-          {image && (
-            <img
-              src={URL.createObjectURL(image)}
-              alt="preview"
-              className="absolute top-1/2 left-2 w-10 h-10 -translate-y-1/2 object-cover border rounded shadow"
+          {images.map((img, index) => (
+            <ImagePreview
+              key={index}
+              file={img}
+              onRemove={() => setImages((prev) => prev.filter((_, i) => i !== index))}
             />
-          )}
+          ))}
         </div>
         <button
           type="submit"
