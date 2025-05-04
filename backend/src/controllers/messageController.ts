@@ -14,9 +14,8 @@ export const handleMessage: RequestHandler = async (req, res) => {
   const processedImageUrls = await processImages(files);
 
   const replyContent = [
-    `「${content}」とおっしゃいましたね。`,
-    processedImageUrls.length > 0 && `画像を加工してお返しします。`,
-    '(バックエンドより返信)',
+    content && `"${content.split('').reverse().join('')}"`,
+    processedImageUrls.length > 0 && `画像処理しました。`,
   ]
     .filter(Boolean)
     .join('\n');
