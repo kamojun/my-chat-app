@@ -12,17 +12,25 @@ export default function ChatMessage({ message }: { message: MessageData }) {
       {message.content && (
         <p className="whitespace-pre-wrap">{message.content}</p>
       )}
-      {message.images?.map(image => <img
-        src={URL.createObjectURL(image)}
-        alt="sent"
-        className="mt-2 max-w-xs h-auto rounded"
-      />)}
+      {message.images?.map((image, i) => (
+        <img
+          key={i}
+          src={URL.createObjectURL(image)}
+          alt="sent"
+          className="mt-2 w-full max-w-xs h-auto rounded"
+        />
+      ))}
 
-      {message.imageUrls?.map(url => <img
-        src={url}
-        alt="添付画像"
-        className="max-w-xs mt-2 rounded"
-      />)}
+      {message.imageUrls?.map((url, i) => (
+        <img
+          key={i}
+          src={url}
+          alt="添付画像"
+          className="mt-2 w-full max-w-xs h-auto rounded"
+        />
+      ))}
+
+
     </div>
   );
 }
