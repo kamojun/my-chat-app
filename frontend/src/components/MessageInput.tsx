@@ -42,35 +42,40 @@ export default function MessageInput({ onSend }: { onSend: (text: string, image?
 
   return (
     <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
-      <div className="flex items-center gap-2">
-        <div className="relative w-full">
+      <div className="flex flex-col gap-2 w-full">
+
+        {/* 入力欄＋送信ボタン（横並び） */}
+        <div className="flex items-center gap-2">
           <TextareaAutosize
             minRows={1}
             maxRows={6}
-            className={`w-full border rounded px-3 py-3 resize-none box-border focus:outline-none focus:ring-2 focus:ring-blue-300 ${image ? 'pl-14' : ''
-              }`}
+            className="w-full border rounded px-3 py-3 resize-none box-border focus:outline-none focus:ring-2 focus:ring-blue-300"
             value={text}
             onChange={(e) => setText(e.target.value)}
             onKeyDown={handleKeyDown}
             onPaste={handlePaste}
-            onCompositionStart={() => setIsComposing(true)}
-            onCompositionEnd={() => setIsComposing(false)}
             placeholder="メッセージを入力..."
           />
-          {images.map((img, index) => (
-            <ImagePreview
-              key={index}
-              file={img}
-              onRemove={() => setImages((prev) => prev.filter((_, i) => i !== index))}
-            />
-          ))}
+          <button
+            type="submit"
+            className="bg-blue-500 text-white rounded-full w-10 h-10 flex items-center justify-center hover:bg-blue-600 shrink-0"
+          >
+            <HiArrowUp size={20} />
+          </button>
         </div>
-        <button
-          type="submit"
-          className="bg-blue-500 text-white rounded-full w-10 h-10 flex items-center justify-center hover:bg-blue-600"
-        >
-          <HiArrowUp size={20} />
-        </button>
+
+        {/* ✅ サムネイルたちはここに */}
+        {images.length > 0 && (
+          <div className="flex gap-2 flex-wrap">
+            {images.map((img, i) => (
+              <ImagePreview
+                key={i}
+                file={img}
+                onRemove={() => setImages((prev) => prev.filter((_, j) => j !== i))}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </form>
   );
