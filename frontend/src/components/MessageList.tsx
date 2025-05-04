@@ -1,8 +1,8 @@
 import { useEffect, useRef } from 'react';
 import ChatMessage from './ChatMessage';
-import type { Message } from '../types/message';
+import type { MessageData } from '../types/message';
 
-export default function MessageList({ messages }: { messages: Message[] }) {
+export default function MessageList({ messages }: { messages: MessageData[] }) {
   const bottomRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {

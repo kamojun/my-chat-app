@@ -1,6 +1,6 @@
-import type { Message } from '../types/message';
+import type { MessageData } from '../types/message';
 
-export default function ChatMessage({ message }: { message: Message }) {
+export default function ChatMessage({ message }: { message: MessageData }) {
   const isUser = message.role === 'user';
 
   return (
@@ -18,6 +18,14 @@ export default function ChatMessage({ message }: { message: Message }) {
           src={URL.createObjectURL(message.image)}
           alt="sent"
           className="mt-2 max-w-xs h-auto rounded"
+        />
+      )}
+
+      {message.imageUrl && (
+        <img
+          src={message.imageUrl}
+          alt="添付画像"
+          className="max-w-xs mt-2 rounded"
         />
       )}
     </div>

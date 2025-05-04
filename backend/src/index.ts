@@ -7,6 +7,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/api/message', messageRoutes);
+app.use('/uploads', express.static('uploads'));
 
 const PORT = 3001;
 app.listen(PORT, () => {

@@ -1,27 +1,34 @@
 import { useState, useRef, useEffect } from 'react';
 import MessageList from './components/MessageList';
 import MessageInput from './components/MessageInput';
-import type { Message } from './types/message';
 import './index.css';
+import { MessageData } from './types/message';
 
 export default function App() {
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<MessageData[]>([]);
   const bottomRef = useRef<HTMLDivElement>(null);
 
-  const sendMessage = async (text: string) => {
+  const sendMessage = async (text: string, image?: File) => {
+    const formData = new FormData();
+    formData.append('content', text);
+    if (image) {
+      formData.append('image', image);
+    }
     // ユーザーのメッセージを先に追加
-    const userMessage: Message = { role: 'user', content: text };
+    const userMessage: MessageData = {
+      role: 'user',
+      content: text,
+      image,
+    };
     setMessages((prev) => [...prev, userMessage]);
 
     try {
       const res = await fetch('/api/message', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ content: text }),
+        body: formData,
       });
-
-      const data = await res.json();
-      setMessages((prev) => [...prev, { role: 'assistant', content: data.content }]);
+      const data = await res.json() as MessageData;
+      setMessages((prev) => [...prev, data]);
     } catch (error) {
       console.error('送信エラー:', error);
       setMessages((prev) => [
@@ -33,14 +40,14 @@ export default function App() {
 
   const handleSend = (text: string, image?: File) => {
     // 1. user メッセージを追加
-    const userMessage: Message = {
+    const userMessage: MessageData = {
       role: 'user',
       content: text,
       image,
     };
 
     // 2. 仮の assistant メッセージを作る（例: オウム返し）
-    const assistantMessage: Message = {
+    const assistantMessage: MessageData = {
       role: 'assistant',
       content: [
         text && `「${text}」とおっしゃいましたね。`,

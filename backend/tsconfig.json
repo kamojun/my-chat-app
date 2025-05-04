@@ -1,9 +1,22 @@
 {
+    "include": [
+        "src"
+    ], // ← shared は型だけ参照、ビルド対象に含めない
+    "exclude": [
+        "../shared"
+    ],
+    "extends": "../tsconfig.json",
     "compilerOptions": {
         "target": "ES2020",
-        "module": "CommonJS",
-        "rootDir": "src",
+        "module": "commonjs",
+        "rootDir": "src", // ← backend/src 以下のみビルド
         "outDir": "dist",
+        "baseUrl": ".",
+        "paths": {
+            "@shared/*": [
+                "../shared/*"
+            ]
+        },
         /* Visit https://aka.ms/tsconfig to read more about this file */
         /* Projects */
         // "incremental": true,                              /* Save .tsbuildinfo files to allow for incremental compilation of projects. */

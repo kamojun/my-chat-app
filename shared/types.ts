@@ -7,9 +7,3 @@ export interface ChatMessage {
   content: string;
   imageUrl?: string;
 }
-
-export interface ChatResponse {
-  role: 'assistant';
-  content: string;
-  imageUrl?: string;
-}

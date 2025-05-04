@@ -10,6 +10,7 @@ export default defineConfig({
         target: 'http://localhost:3001', // ExpressサーバーのURL
         changeOrigin: true,
       },
+      '/uploads': { target: 'http://localhost:3001', changeOrigin: true },
     },
   },
 })

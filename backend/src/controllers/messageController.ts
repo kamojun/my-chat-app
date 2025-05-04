@@ -17,7 +17,7 @@ export const handleMessage = (req: MessageRequest, res: Response) => {
 
   res.json({
     role: 'assistant',
-    content: (content ? `「${content}」とおっしゃいましたね。(バックエンドより返信)` : "")
-    // imageUrl: file ? `/uploads/${file.filename}` : null,
+    content,
+    imageUrl: file ? `/uploads/${file.filename}` : undefined
   });
 };
