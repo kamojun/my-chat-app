@@ -22,6 +22,7 @@ export default function App() {
     const userMessage: MessageData = {
       role: 'user',
       content: text,
+      images,
     };
     setMessages((prev) => [...prev, userMessage]);
 
