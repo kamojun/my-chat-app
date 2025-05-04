@@ -3,17 +3,17 @@ import { HiArrowUp } from 'react-icons/hi';
 import TextareaAutosize from 'react-textarea-autosize';
 import ImagePreview from './ImagePreview';
 
-export default function MessageInput({ onSend }: { onSend: (text: string, image?: File) => void }) {
+export default function MessageInput({ onSend }: { onSend: (text: string, images: File[]) => void }) {
   const [text, setText] = useState('');
-  const [image, setImage] = useState<File | null>(null);
+  // const [image, setImage] = useState<File | null>(null);
   const [images, setImages] = useState<File[]>([]);
   const [isComposing, setIsComposing] = useState(false);
 
   const handleSubmit = () => {
-    if (!text.trim() && !image) return;
-    onSend(text, image || undefined);
+    if (!text.trim() && images.length == 0) return;
+    onSend(text, images);
     setText('');
-    setImage(null);
+    setImages([]);
   };
 
   const handlePaste = (e: React.ClipboardEvent<HTMLTextAreaElement>) => {

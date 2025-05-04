@@ -5,6 +5,6 @@ import multer from 'multer';
 const upload = multer({ dest: 'uploads/' });
 const router = Router();
 
-router.post('/', upload.single('image'), handleMessage);
+router.post('/', upload.array('images'), handleMessage);
 
 export default router;

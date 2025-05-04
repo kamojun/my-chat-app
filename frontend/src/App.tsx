@@ -8,17 +8,20 @@ export default function App() {
   const [messages, setMessages] = useState<MessageData[]>([]);
   const bottomRef = useRef<HTMLDivElement>(null);
 
-  const sendMessage = async (text: string, image?: File) => {
+  const sendMessage = async (text: string, images: File[]) => {
     const formData = new FormData();
     formData.append('content', text);
-    if (image) {
-      formData.append('image', image);
+    images.forEach(image => formData.append('images', image));
+    console.log('送信内容:');
+    for (const [key, value] of formData.entries()) {
+      console.log(key, value);
     }
+
+
     // ユーザーのメッセージを先に追加
     const userMessage: MessageData = {
       role: 'user',
       content: text,
-      image,
     };
     setMessages((prev) => [...prev, userMessage]);
 
@@ -38,30 +41,9 @@ export default function App() {
     }
   };
 
-  const handleSend = (text: string, image?: File) => {
-    // 1. user メッセージを追加
-    const userMessage: MessageData = {
-      role: 'user',
-      content: text,
-      image,
-    };
-
-    // 2. 仮の assistant メッセージを作る（例: オウム返し）
-    const assistantMessage: MessageData = {
-      role: 'assistant',
-      content: [
-        text && `「${text}」とおっしゃいましたね。`,
-        image && '画像も受け取りました！',
-      ].filter(Boolean).join('\n')
-    };
-
-    setMessages((prev) => [...prev, userMessage, assistantMessage]);
-  };
-
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
-  // return <h1 className="text-3xl font-bold text-red-500">Hello Tailwind</h1>;
 
   return (
     <div className="flex flex-col h-screen">
