@@ -27,7 +27,7 @@ export default function App() {
     setMessages((prev) => [...prev, userMessage]);
 
     try {
-      const res = await fetch('/api/message', {
+      const res = await fetch('http://localhost:3001/api/message', {
         method: 'POST',
         body: formData,
       });

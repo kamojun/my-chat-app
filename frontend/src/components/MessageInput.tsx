@@ -7,7 +7,7 @@ export default function MessageInput({ onSend }: { onSend: (text: string, images
   const [text, setText] = useState('');
   // const [image, setImage] = useState<File | null>(null);
   const [images, setImages] = useState<File[]>([]);
-  const [isComposing, setIsComposing] = useState(false);
+  const [isComposing, _] = useState(false);
 
   const handleSubmit = () => {
     if (!text.trim() && images.length == 0) return;
