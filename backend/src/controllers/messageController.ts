@@ -11,7 +11,9 @@ export const handleMessage: RequestHandler = async (req, res) => {
   const content = (req.body as any).content;
   const files = req.files as Express.Multer.File[] ?? [];
 
-  const processedImageUrls = await processImages(files);
+  const hostUrl = `${req.protocol}://${req.get('host')}`; // e.g. http://localhost:3001
+  const processedImagePaths = await processImages(files);
+  const processedImageUrls = processedImagePaths.map(p => `${hostUrl}${p}`);
 
   const replyContent = [
     content && `"${content.split('').reverse().join('')}"`,
